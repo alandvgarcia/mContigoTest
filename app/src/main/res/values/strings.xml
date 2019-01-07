@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MContigoTest</string>
+    <string name="lbl_buscar">Digite o que deseja buscar...</string>
 </resources>
