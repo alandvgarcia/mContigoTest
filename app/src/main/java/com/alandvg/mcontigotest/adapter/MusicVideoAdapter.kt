@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import com.alandvg.mcontigotest.R
 import com.alandvg.mcontigotest.databinding.MusicVideoItemBinding
+import com.squareup.picasso.Picasso
 
 
 class MusicVideoAdapter(val listSearch: List<MusicVideo>) :
@@ -33,6 +34,11 @@ class MusicVideoAdapter(val listSearch: List<MusicVideo>) :
 
         fun bind(musicVideo : MusicVideo){
             binding.musicVideo = musicVideo
+
+
+           Picasso.get().load(musicVideo.artworkUrl100)
+               .into(binding.imgAlbum)
+
         }
 
 
