@@ -30,6 +30,8 @@ class SearchFragment : Fragment() {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.search_fragment, container, false)
 
+        binding.viewModel = viewModel
+
         return binding.root
     }
 

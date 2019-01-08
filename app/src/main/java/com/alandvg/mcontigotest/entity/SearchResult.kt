@@ -4,5 +4,5 @@ import com.google.gson.JsonArray
 
 data class SearchResult(
     var resultCount: Long? = null,
-    var results: JsonArray? = null
+    var results: List<MusicVideo>? = null
 )
