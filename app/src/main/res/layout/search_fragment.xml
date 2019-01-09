@@ -8,19 +8,28 @@
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-    >
+            android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
                 android:paddingBottom="100dp"
-                android:paddingTop="66dp"
+                android:paddingTop="@{viewModel.enabledSearch ? 66 : 0}"
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginTop="0dp"
                 android:adapter="@{viewModel.adapterSearch}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
         />
+
+
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="@{viewModel.searching &amp;&amp; viewModel.textSearch.length &gt; 0 ? View.VISIBLE : View.GONE}"
+                android:id="@+id/progressBar"/>
         <com.google.android.material.bottomappbar.BottomAppBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,9 +38,8 @@
                 android:id="@+id/bottomAppBar"
                 app:fabAlignmentMode="end"
         />
-
-
         <androidx.cardview.widget.CardView
+                android:visibility="@{viewModel.enabledSearch ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="top"
@@ -45,20 +53,32 @@
                     android:layout_height="match_parent">
 
                 <EditText
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:imeOptions="actionSearch"
-                        android:layout_width="match_parent"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
                         android:hint="@string/lbl_buscar"
+                        android:text="@={viewModel.textSearch}"
                         android:ems="10"
                         android:gravity="top"
                         android:id="@+id/editTextSearch"
-                        android:singleLine="true" app:layout_constraintEnd_toEndOf="parent"
+                        android:singleLine="true"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/img_btn_clear"/>
+                <ImageButton
+                        android:visibility="@{viewModel.textSearch.length &gt; 0 ? View.VISIBLE : View.GONE}"
+                        android:layout_width="wrap_content"
+                        android:onClick="@{() -> viewModel.clearTextSearch()}"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_close_24dp"
+                        android:id="@+id/img_btn_clear" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/editTextSearch" android:layout_marginStart="8dp"
+                        android:tint="@android:color/black" style="@android:style/Widget.Material.ImageButton"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -66,12 +86,14 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:src="@drawable/ic_search_24dp"
+                android:src="@{viewModel.enabledSearch ? @drawable/ic_close_24dp : @drawable/ic_search_24dp}"
                 app:layout_anchor="@id/bottomAppBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:id="@+id/floatingActionButton"/>
+                android:id="@+id/floatingActionButton"
+                android:onClick="@{() -> viewModel.initSearch(!viewModel.enabledSearch)}"
+                android:focusable="true"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
 

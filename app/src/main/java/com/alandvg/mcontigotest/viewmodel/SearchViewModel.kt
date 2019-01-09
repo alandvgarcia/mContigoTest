@@ -1,6 +1,8 @@
 package com.alandvg.mcontigotest.viewmodel
 
 import android.util.Log
+import androidx.databinding.Observable
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel;
 import com.alandvg.mcontigotest.adapter.MusicVideoAdapter
@@ -14,25 +16,52 @@ class SearchViewModel : ViewModel() {
 
     val compositeDisposableReques = CompositeDisposable()
     val adapterSearch = ObservableField<MusicVideoAdapter>()
+    val textSearch = ObservableField<String>("")
+    val searching = ObservableBoolean(false)
+    val enabledSearch = ObservableBoolean(false)
 
     init {
-        compositeDisposableReques.add(
-            ItunesApi.itunesService()
-                .searchMusicVideo("beyonce")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError {
 
-                }
-                .subscribe {
-                    Log.d("Teste", "${it.resultCount} ${it.results}")
+        textSearch.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
 
-                    adapterSearch.set(MusicVideoAdapter(it.results ?: listOf()))
+                compositeDisposableReques.add(
+                    ItunesApi.itunesService()
+                        .searchMusicVideo(textSearch.get() ?: "")
+                        .filter { textSearch.get()?.length ?: 0 > 0 }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe {
+                            searching.set(true)
+                        }
+                        .doOnError {
 
-                    compositeDisposableReques.clear()
-                }
-        )
+                        }
+                        .subscribe {
+                            Log.d("Teste", "${it.resultCount} ${it.results}")
 
+                            adapterSearch.set(MusicVideoAdapter(it.results ?: listOf()))
+
+                            compositeDisposableReques.clear()
+
+                            searching.set(false)
+                        }
+                )
+
+            }
+
+        })
+
+    }
+
+
+    fun clearTextSearch(){
+        textSearch.set("")
+    }
+
+
+    fun initSearch(search: Boolean = true) {
+        enabledSearch.set(search)
     }
 
 
