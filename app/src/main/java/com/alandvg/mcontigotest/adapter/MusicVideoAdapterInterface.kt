@@ -4,4 +4,6 @@ interface MusicVideoAdapterInterface {
 
     fun onSelectDetalhesArtista(linkArtist : String)
 
+    fun onPlayVideoPreview(linkVideo : String)
+
 }

@@ -74,7 +74,9 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:text="@string/lbl_visitar_pagina_artista"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                />
                 <View
                         android:id="@+id/divider"
                         android:layout_width="0dp"

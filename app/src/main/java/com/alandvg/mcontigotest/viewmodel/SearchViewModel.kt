@@ -13,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
+
     val compositeDisposableRequest = CompositeDisposable()
     val adapterSearch = ObservableField<MusicVideoAdapter>()
     val textSearch = ObservableField<String>("")
@@ -20,6 +21,7 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
     val enabledSearch = ObservableBoolean(false)
 
     val linkSelected = ObservableField<String>("")
+    val previewSelected = ObservableField<String>("")
 
     init {
 
@@ -63,6 +65,10 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
         linkSelected.set(link)
     }
 
+    override fun onPlayVideoPreview(linkVideo: String) {
+        previewSelected.set(linkVideo)
+    }
+
     fun clearTextSearch(){
         textSearch.set("")
     }
@@ -71,6 +77,8 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
     fun initSearch(search: Boolean = true) {
         enabledSearch.set(search)
     }
+
+
 
 
 }

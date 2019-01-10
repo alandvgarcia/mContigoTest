@@ -59,6 +59,12 @@ class MusicVideoAdapter(val listSearch: List<MusicVideo>, val listener: MusicVid
                     listener.onSelectDetalhesArtista(link)
                 }
             }
+            musicVideo.previewUrl?.let {link->
+                binding.imgAlbum.setOnClickListener {view ->
+                    listener.onPlayVideoPreview(musicVideo.previewUrl)
+                }
+            }
+
 
         }
 

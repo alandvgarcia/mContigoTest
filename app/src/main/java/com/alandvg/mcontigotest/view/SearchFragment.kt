@@ -17,6 +17,10 @@ import android.widget.Toast
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.SimpleExoPlayer
+
+
 
 
 class SearchFragment : Fragment() {
@@ -53,6 +57,18 @@ class SearchFragment : Fragment() {
                     }
 
                     viewModel.linkSelected.set("")
+                }
+            }
+
+        })
+
+        viewModel.previewSelected.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                if(!viewModel.previewSelected.get().isNullOrEmpty()){
+
+                    val player = ExoPlayerFactory.newSimpleInstance(context)
+
+                    viewModel.previewSelected.set("")
                 }
             }
 
