@@ -13,6 +13,10 @@ import com.alandvg.mcontigotest.viewmodel.SearchViewModel
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.view.*
+import android.widget.Toast
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 
 
 class SearchFragment : Fragment() {
@@ -35,6 +39,23 @@ class SearchFragment : Fragment() {
                     binding.editTextSearch.clearFocus()
                 }
             }
+        })
+
+        viewModel.linkSelected.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                if(!viewModel.linkSelected.get().isNullOrEmpty()){
+
+                    try {
+                        val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.linkSelected.get()))
+                        startActivity(myIntent)
+                    } catch (e: ActivityNotFoundException) {
+                        e.printStackTrace()
+                    }
+
+                    viewModel.linkSelected.set("")
+                }
+            }
+
         })
 
     }

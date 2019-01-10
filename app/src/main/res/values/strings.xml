@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MContigoTest</string>
     <string name="lbl_buscar">Digite o que deseja buscar...</string>
+    <string name="lbl_visitar_pagina_artista">DETALHES ARTISTA</string>
 </resources>

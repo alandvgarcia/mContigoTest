@@ -6,26 +6,31 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel;
 import com.alandvg.mcontigotest.adapter.MusicVideoAdapter
+import com.alandvg.mcontigotest.adapter.MusicVideoAdapterInterface
 import com.alandvg.mcontigotest.api.ItunesApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class SearchViewModel : ViewModel() {
-
-
-    val compositeDisposableReques = CompositeDisposable()
+class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
+    val compositeDisposableRequest = CompositeDisposable()
     val adapterSearch = ObservableField<MusicVideoAdapter>()
     val textSearch = ObservableField<String>("")
     val searching = ObservableBoolean(false)
     val enabledSearch = ObservableBoolean(false)
+
+    val linkSelected = ObservableField<String>("")
 
     init {
 
         textSearch.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
 
-                compositeDisposableReques.add(
+                Log.d("Teste", "${textSearch.get()}")
+
+                compositeDisposableRequest.clear()
+
+                compositeDisposableRequest.add(
                     ItunesApi.itunesService()
                         .searchMusicVideo(textSearch.get() ?: "")
                         .filter { textSearch.get()?.length ?: 0 > 0 }
@@ -40,9 +45,9 @@ class SearchViewModel : ViewModel() {
                         .subscribe {
                             Log.d("Teste", "${it.resultCount} ${it.results}")
 
-                            adapterSearch.set(MusicVideoAdapter(it.results ?: listOf()))
+                            adapterSearch.set(MusicVideoAdapter(it.results ?: listOf(), this@SearchViewModel))
 
-                            compositeDisposableReques.clear()
+                            compositeDisposableRequest.clear()
 
                             searching.set(false)
                         }
@@ -54,6 +59,9 @@ class SearchViewModel : ViewModel() {
 
     }
 
+    override fun onSelectDetalhesArtista(link : String) {
+        linkSelected.set(link)
+    }
 
     fun clearTextSearch(){
         textSearch.set("")
