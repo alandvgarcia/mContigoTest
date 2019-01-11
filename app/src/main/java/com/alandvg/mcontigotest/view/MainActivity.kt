@@ -2,40 +2,29 @@ package com.alandvg.mcontigotest.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.alandvg.mcontigotest.R
-import com.alandvg.mcontigotest.api.ItunesApi
-import com.alandvg.mcontigotest.entity.SearchResult
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.alandvg.mcontigotest.databinding.MainHostActivityBinding
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
 
+    lateinit var binding : MainHostActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-
-//        ItunesApi.itunesService().searchMusicVideo("beyonce").enqueue(object : Callback<SearchResult> {
-//            override fun onFailure(call: Call<SearchResult>, t: Throwable) {
-//                Log.d("Teste", "erro")
-//            }
-//
-//            override fun onResponse(call: Call<SearchResult>, response: Response<SearchResult>) {
-//                Log.d("Teste", response.body().toString())
-//
-//
-//
-//
-//            }
-//
-//
-//
-//        })
-
-
+        binding = DataBindingUtil.setContentView(this,R.layout.main_host_activity)
 
     }
+
+
 }
+

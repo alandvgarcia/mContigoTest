@@ -17,18 +17,21 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
     val compositeDisposableRequest = CompositeDisposable()
     val adapterSearch = ObservableField<MusicVideoAdapter>()
     val textSearch = ObservableField<String>("")
-    val searching = ObservableBoolean(false)
+    val searching = ObservableBoolean()
     val enabledSearch = ObservableBoolean(false)
+
+    val successSearch = ObservableBoolean(false)
+    val firstSearch = ObservableBoolean(false)
 
     val linkSelected = ObservableField<String>("")
     val previewSelected = ObservableField<String>("")
 
     init {
 
+        adapterSearch.set(MusicVideoAdapter(mutableListOf(), this@SearchViewModel))
+
         textSearch.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-
-                Log.d("Teste", "${textSearch.get()}")
 
                 compositeDisposableRequest.clear()
 
@@ -40,19 +43,33 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
                             searching.set(true)
+                            if (adapterSearch.get()?.listSearch?.size ?: 0 > 0) {
+                                adapterSearch.get()?.listSearch?.clear()
+                                adapterSearch.get()?.notifyDataSetChanged()
+                            }
                         }
-                        .doOnError {
-
+                        .doOnTerminate {
+                            searching.set(false)
+                            firstSearch.set(true)
                         }
-                        .subscribe {
+                        .subscribe({
                             Log.d("Teste", "${it.resultCount} ${it.results}")
 
-                            adapterSearch.set(MusicVideoAdapter(it.results ?: listOf(), this@SearchViewModel))
-
-                            compositeDisposableRequest.clear()
+                            it.results?.let { results ->
+                                adapterSearch.get()?.listSearch?.addAll(results)
+                                adapterSearch.get()?.notifyDataSetChanged()
+                                successSearch.set(true)
+                            }
 
                             searching.set(false)
-                        }
+                            compositeDisposableRequest.clear()
+                        },
+                            { error ->
+                                error.printStackTrace()
+                                Log.e("Teste", "Erro Internet")
+                                successSearch.set(false)
+                                compositeDisposableRequest.clear()
+                            })
                 )
 
             }
@@ -61,7 +78,7 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
 
     }
 
-    override fun onSelectDetalhesArtista(link : String) {
+    override fun onSelectDetalhesArtista(link: String) {
         linkSelected.set(link)
     }
 
@@ -69,7 +86,7 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
         previewSelected.set(linkVideo)
     }
 
-    fun clearTextSearch(){
+    fun clearTextSearch() {
         textSearch.set("")
     }
 
@@ -77,8 +94,6 @@ class SearchViewModel : ViewModel(), MusicVideoAdapterInterface {
     fun initSearch(search: Boolean = true) {
         enabledSearch.set(search)
     }
-
-
 
 
 }

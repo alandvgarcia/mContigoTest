@@ -11,7 +11,7 @@ import com.alandvg.mcontigotest.databinding.MusicVideoItemBinding
 import com.squareup.picasso.Picasso
 
 
-class MusicVideoAdapter(val listSearch: List<MusicVideo>, val listener: MusicVideoAdapterInterface) :
+class MusicVideoAdapter(val listSearch: MutableList<MusicVideo>, val listener: MusicVideoAdapterInterface) :
     RecyclerView.Adapter<MusicVideoAdapter.MusicVideoAdapterViewHolder>() {
 
 
@@ -40,6 +40,8 @@ class MusicVideoAdapter(val listSearch: List<MusicVideo>, val listener: MusicVid
 
 
             Picasso.get().load(musicVideo.artworkUrl100)
+                .placeholder(R.drawable.ic_image_24dp)
+                .error(R.drawable.ic_broken_image_black_24dp)
                 .into(binding.imgAlbum)
 
             musicVideo.trackTimeMillis?.let {
@@ -60,7 +62,7 @@ class MusicVideoAdapter(val listSearch: List<MusicVideo>, val listener: MusicVid
                 }
             }
             musicVideo.previewUrl?.let {link->
-                binding.imgAlbum.setOnClickListener {view ->
+                binding.btnPreview.setOnClickListener {view ->
                     listener.onPlayVideoPreview(musicVideo.previewUrl)
                 }
             }
